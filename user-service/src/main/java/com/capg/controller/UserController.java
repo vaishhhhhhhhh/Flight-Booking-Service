@@ -1,6 +1,7 @@
 package com.capg.controller;
 
 import com.capg.dto.UserDataDTO;
+import com.capg.repository.UserRepository;
 import com.capg.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,9 @@ public class UserController {
 
     @Autowired
     private UserDataService userDataService;
+    
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("/create")
     public ResponseEntity<UserDataDTO> createUser(@Valid @RequestBody UserDataDTO userDataDTO) {

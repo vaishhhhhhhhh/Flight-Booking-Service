@@ -14,7 +14,7 @@ public class FlightsInfo {
 
     //@HystrixCommand(fallbackMethod = "getFallbackFlightDetails")
     public Flights getflight(int flightId) {
-        Flights flights = restTemplate.getForObject("http://search-service/flight/get/" + flightId,
+        Flights flights = restTemplate.getForObject("http://searchh-service/flight/get/" + flightId,
                 Flights.class);
         return flights;
     }

@@ -29,9 +29,9 @@ public class MyUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException(email);
         }
         else {
-            if (email.equals("admin")) {
+            if (email.equals("admin@gmail.com")) {
                 roles = Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
-                return new User("admin", "admin", roles);
+                return new User("admin@gmail.com", "admin", roles);
             }
             else {
                 String username = userData.get().getEmail();
