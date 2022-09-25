@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import { useLocation } from 'react-router-dom';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -16,23 +18,43 @@ import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 
 import { Stack, Typography } from '@mui/material';
 
-const Flightdetails = (props) => {
-    const location = useLocation()
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+
+const Allflightdetails = () => {
+    const [open, setOpen] = React.useState(false);
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [flights, setFlights] = useState([]);
 
-    const url = "http://localhost:8080/flight/getByFromTo"
+    const url = "http://localhost:8080/flight/getAll"
 
-    const params = {
-        origin: location.state.origin,
-        destination: location.state.destination
-    }
+    const deleteUrl = "http://localhost:8080/flight/delete/"
 
-    console.log(location.state.origin, location.state.destination)
+    const handleDelete = flight => {
+        <alert >
+                    Flight deleted successfully!
+                </alert>
+        console.log(flight.flightId)
+        axios.delete(deleteUrl + flight.flightId)
+            .then((res) => {
+                console.log(res.data)
+                setOpen(true);
+            }).catch((error) => {
+                console.log(error)
+            });}
 
     useEffect(() => {
-        axios.get(url, { params })
+        axios.get(url)
             .then(res => {
                 console.log(res.data);
                 setFlights(res.data);
@@ -45,37 +67,16 @@ const Flightdetails = (props) => {
                 }
             )
     }, [])
-
     if (error) {
         return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
-        return <Stack sx={{ width: 850, display: 'flex', alignItems: 'center' }}><CircularProgress /></Stack>;
-    } 
-    else if (flights.length === 0) {
-        return (
-            <Stack sx={{ width: 850, display: 'flex' }}>
-                <FlightTakeoffIcon sx={{ mb: 1, fontSize: '150%', color: 'black' }} />
-                <Typography component='h1' variant='caption' color='black' align='left'>
-                    Departing flight
-                </Typography>
-                <Typography sx={{ mb: 2 }} component='h1' variant='h4' color='black' align='left'>
-                    {params.origin} to {params.destination}
-                </Typography>
-                <Typography sx={{ mt: 5, mb: 2 }} component='h1' variant='body1' color='black' align='center'>
-                    Oops! Looks like there are no current flights from {params.origin} to {params.destination}
-                </Typography>
-            </Stack>
-        );
-    } 
-    else {
+        return <div>Loading...</div>;
+    } else {
         return (
             <Stack>
                 <FlightTakeoffIcon sx={{ mb: 1, fontSize: '150%', color: 'black' }} />
-                <Typography component='h1' variant='caption' color='black' align='left'>
-                    Departing flight
-                </Typography>
                 <Typography sx={{ mb: 2 }} component='h1' variant='h4' color='black' align='left'>
-                    {params.origin} to {params.destination}
+                   Complete  Flight details
                 </Typography>
                 <TableContainer component={Paper} elevation={5} sx={{ maxHeight: 400 }} >
                     <Table sx={{ minWidth: 800 }} aria-label="simple table">
@@ -89,7 +90,7 @@ const Flightdetails = (props) => {
                                 <TableCell>Arrival Date</TableCell>
                                 <TableCell align="right">Seats</TableCell>
                                 <TableCell align="right">Fare</TableCell>
-                                <TableCell align="center">Book</TableCell>
+                                <TableCell>Delete details</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -107,20 +108,21 @@ const Flightdetails = (props) => {
                                     <TableCell>{flight.arrivalDate}</TableCell>
                                     <TableCell align="right">{flight.seats}</TableCell>
                                     <TableCell align="right"><CurrencyRupeeIcon fontSize='inherit' />{flight.fare}</TableCell>
-                                    <TableCell sx={{ maxWidth: 60 }} align="center">
-                                        <Button href='/login' variant='contained' color="success">Book</Button>
-                                    </TableCell>
+                                    <TableCell><Button size='small' variant='contained' color="error" onClick={() => handleDelete(flight)}>
+                                    Delete
+                                    </Button></TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
+                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                     deleted successfully!
+                </Alert>
+            </Snackbar>
             </Stack>
         );
     }
 }
-export default Flightdetails;
-
-
-          
-          
+export default Allflightdetails;

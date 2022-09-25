@@ -1,12 +1,14 @@
 import React, { useState, Component } from 'react'
 import ReactDOM from "react-dom/client";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 
 function Search() {
+    
+    const navigate=useNavigate();
     const [inputs, setInputs] = useState({});
 
     const handleChange = event => {
@@ -19,11 +21,16 @@ function Search() {
         
         console.log(inputs);
         event.preventDefault()
+        navigate('/flightdetails', { state: {origin: inputs.origin, destination: inputs.destination}})
     }
-
+    
     return (
+       
+        
         <form onSubmit={handleSubmit}>
+            
             <div className='form'>
+            
                 <Stack direction='row' spacing={2}>
                     <TextField
                         required
@@ -44,11 +51,12 @@ function Search() {
                         inputProps={{ pattern: '[a-zA-Z]{3,15}$' }}
                         onChange={handleChange}
                     />
-                    <Link to="/flightdetails">
-                    <Button variant='contained' type='submit'>Search Flight</Button></Link>
+                    
+                    <Button variant='contained' type='submit'>Search Flight</Button>
                 </Stack>
             </div>
         </form>
+        
     )
 
 }

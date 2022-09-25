@@ -18,10 +18,12 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { Link, Typography } from '@mui/material';
+import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
-function Form() {
-    
+function Flightbooking() {
+    const navigate = useNavigate();
     const [inputs, setInputs] = useState({
         firstName: '',
         lastName: '',
@@ -42,7 +44,7 @@ function Form() {
     };
 
     const handleSubmit = event => {
-        alert(`Hello ${inputs.firstName} ${inputs.lastName}, you have registered successfully!`)
+        alert(`Hello ${inputs.firstName} ${inputs.lastName}, you have booked your flight successfully!`)
         const userObject = {
             firstName: inputs.firstName,
             lastName: inputs.lastName,
@@ -58,6 +60,7 @@ function Form() {
         axios.post('http://localhost:8081/booking/create', userObject)
             .then((res) => {
                 console.log(res.data)
+                navigate('/bookingbyid',{state:{bookingId: res.data.bookingId}})
             }).catch((error) => {
                 console.log(error)
             });
@@ -160,4 +163,4 @@ function Form() {
     
 }
 
-export default Form;
+export default Flightbooking;

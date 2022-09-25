@@ -4,13 +4,13 @@ import { React } from "react";
 import Switch from "react-js-switch";
 import Search from './Components/Searchform';
 import Index from './Components/Index';
-import Flightbooking from './Components/Flightbooking';
 
 
 function App() {
   return (
    <div className='App'>
-    <img src='https://thumbs.dreamstime.com/b/passenger-airplane-flying-above-clouds-view-window-plane-to-amazing-sky-beautiful-clouds-passenger-airplane-flying-112676322.jpg'/>
+   <img src='https://sulcdn.azureedge.net/biz-live/img/-kalidass--10328112-3807ec7b.jpeg'/>
+   
       <div className='main'>
       
         <Index />

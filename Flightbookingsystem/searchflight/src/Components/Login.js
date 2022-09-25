@@ -13,10 +13,12 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { Link, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 
 function Login() {
     
+    const navigate = useNavigate();
     const [inputs, setInputs] = useState({
         username: '',
         password: '',
@@ -50,17 +52,24 @@ function Login() {
         .then((res) => {
             alert(`loggedin successfully!`)
             console.log(res.data)
+            if (inputs.username === 'admin@gmail.com'){
+                navigate('/admin',{state: {jwt: res.data.jwt}})
+            }
+            else {
+                navigate('/flightbooking')
+            }
         }).catch((error) => {
             alert(`login failed!`)
             console.log(error)
         });
         event.preventDefault()
+        
     }
 
         return (
             <form onSubmit={handleSubmit}>
                 <div className='form'>
-                    <Stack alignItems='center' direction='column' spacing={2}>
+                    <Stack alignItems='centre' direction='column' spacing={2}>
                         <Stack alignItems='center' direction='column' spacing={0}>
                             <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
                                 <LockOutlinedIcon />
@@ -72,7 +81,7 @@ function Login() {
                             fullWidth
                             autoFocus
                             id="outlined-required"
-                            label="Username"
+                            label="Email"
                             name='username'
                             value={inputs.username}
                             inputProps={{ pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$' }}
